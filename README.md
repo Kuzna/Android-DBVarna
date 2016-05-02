@@ -1,5 +1,8 @@
 # Android-DBVarna
 
+[![Release](https://jitpack.io/v/Kuzna/Android-DBVarna.svg)](https://github.com/Kuzna/Android-DBVarna)
+[![GitHub license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Kuzna/Android-DBVarna/blob/master/LICENSE.md)
+
 ## Requirements
 
 * JDK 7 or later to build with annotation processors
