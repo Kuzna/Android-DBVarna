@@ -1,12 +1,15 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 23
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
@@ -16,11 +19,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 }
 
 dependencies {
-    compile project(':dbvarna-annotations')
-    compile 'com.android.support:appcompat-v7:23.3.0'
+//    def deps = rootProject.ext.dependencies
 
-    testCompile 'junit:junit:4.12'
+    compile project(':dbvarna-annotations')
+    compile deps.supportAnnotations
+    provided deps.supportv7
+
+    testCompile deps.junit
 }
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+bintray {
+    user = properties.getProperty('bintrayUser', '')
+    key = properties.getProperty('bintrayApiKey', '')
+    pkg {
+        repo = POM_REPO_NAME
+        name = POM_ARTIFACT_ID
+
+        version {
+            name = VERSION_NAME
+        }
+
+        licenses = [POM_LICENCE_NAME]
+        vcsUrl = POM_SCM_URL
+        websiteUrl = POM_URL
+    }
+    configurations = ['archives']
+}
+
+apply from: rootProject.file('publish.gradle')

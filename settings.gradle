@@ -1,1 +1,4 @@
-include ':sample', ':dbvarna-annotations', ':dbvarna-processor', ':dbvarna'
+include ':dbvarna'
+include ':dbvarna-annotations'
+include ':dbvarna-processor'
+include ':sample'

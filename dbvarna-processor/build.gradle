@@ -1,15 +1,42 @@
 apply plugin: 'java'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
-group= 'cz.kuzna.android'
+targetCompatibility = JavaVersion.VERSION_1_7
+sourceCompatibility = JavaVersion.VERSION_1_7
 
-project.ext.artifactId = bt_name
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+bintray {
+    user = properties.getProperty('bintrayUser', '')
+    key = properties.getProperty('bintrayApiKey', '')
+    pkg {
+        repo = POM_REPO_NAME
+        name = POM_ARTIFACT_ID
+
+        version {
+            name = VERSION_NAME
+        }
+
+        licenses = [POM_LICENCE_NAME]
+        vcsUrl = POM_SCM_URL
+        websiteUrl = POM_URL
+    }
+    configurations = ['archives']
+}
 
 dependencies {
-    compile project(":dbvarna-annotations")
-    compile 'com.squareup:javapoet:1.6.1'
-    compile 'com.google.auto.service:auto-service:1.0-rc2'
-//    compile 'com.google.auto:auto-common:0.6'
+//    def deps = rootProject.ext.dependencies
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'com.google.testing.compile:compile-testing:0.9'
+    compile project(":dbvarna-annotations")
+    compile deps.autoService
+    compile deps.javapoet
+
+    testCompile deps.junit
+    testCompile deps.compiletesting
+    testCompile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
 }
+
+apply from: rootProject.file('publish.gradle')

@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DBVarna.iml" filepath="$PROJECT_DIR$/DBVarna.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sample/app.iml" filepath="$PROJECT_DIR$/sample/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dbvarna-processor/dbvarba-processor.iml" filepath="$PROJECT_DIR$/dbvarna-processor/dbvarba-processor.iml" />
       <module fileurl="file://$PROJECT_DIR$/dbvarna/dbvarna.iml" filepath="$PROJECT_DIR$/dbvarna/dbvarna.iml" />
       <module fileurl="file://$PROJECT_DIR$/dbvarna-annotations/dbvarna-annotations.iml" filepath="$PROJECT_DIR$/dbvarna-annotations/dbvarna-annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/dbvarna-processor/dbvarna-processor.iml" filepath="$PROJECT_DIR$/dbvarna-processor/dbvarna-processor.iml" />
