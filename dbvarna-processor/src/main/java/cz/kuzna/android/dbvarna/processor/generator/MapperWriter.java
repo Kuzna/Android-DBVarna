@@ -1,7 +1,6 @@
 package cz.kuzna.android.dbvarna.processor.generator;
 
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
@@ -11,7 +10,6 @@ import javax.lang.model.element.Modifier;
 
 import cz.kuzna.android.dbvarna.processor.definition.ColumnDefinition;
 import cz.kuzna.android.dbvarna.processor.definition.TableDefinition;
-import cz.kuzna.android.dbvarna.processor.utils.ProcessorUtils;
 import cz.kuzna.android.dbvarna.processor.utils.StringUtils;
 
 /**
@@ -93,18 +91,28 @@ public class MapperWriter extends BaseWriter {
                 .returns(contentValuesClass)
                 .addAnnotation(Override.class)
                 .addParameter(entityClass, "entity", Modifier.FINAL)
-                .addParameter(TypeName.BOOLEAN, "insert", Modifier.FINAL);
+                .addParameter(TypeName.BOOLEAN, "addPrimaryKey", Modifier.FINAL);
 
         builder.addStatement("final $T values = new $T()", contentValuesClass, contentValuesClass);
 
         for(final ColumnDefinition columnDefinition : tableDefinition.getColumns()) {
-            final boolean isBoolean = columnDefinition.getValueClass().isAssignableFrom(Boolean.class) || columnDefinition.getValueClass().isAssignableFrom(boolean.class);
+                if(columnDefinition.isPrimaryKey()) {
+                    final StringBuilder stmt = new StringBuilder();
+                    stmt.append("\nif(!addPrimaryKey) {\n");
+                    stmt.append("\tvalues.put($T." + TableWriter.COLUMN_PREFIX + columnDefinition.getName().toUpperCase() + ", entity." + columnDefinition.getGetterMethod() + "());\n");
+                    stmt.append("}\n\n");
 
-            final StringBuilder sb = new StringBuilder();
-            sb.append("values.put($T." + TableWriter.COLUMN_PREFIX + columnDefinition.getName().toUpperCase() + ", entity." + columnDefinition.getGetterMethod() + "()");
-            sb.append((isBoolean ? " ? 1 : 0" : "") + ")");
+                    builder.addCode(stmt.toString(), schemaClass);
+                } else {
 
-            builder.addStatement(sb.toString(), schemaClass);
+                    final boolean isBoolean = columnDefinition.getValueClass().isAssignableFrom(Boolean.class) || columnDefinition.getValueClass().isAssignableFrom(boolean.class);
+
+                    final StringBuilder sb = new StringBuilder();
+                    sb.append("values.put($T." + TableWriter.COLUMN_PREFIX + columnDefinition.getName().toUpperCase() + ", entity." + columnDefinition.getGetterMethod() + "()");
+                    sb.append((isBoolean ? " ? 1 : 0" : "") + ")");
+
+                    builder.addStatement(sb.toString(), schemaClass);
+                }
         }
 
         builder.addStatement("\nreturn values");
