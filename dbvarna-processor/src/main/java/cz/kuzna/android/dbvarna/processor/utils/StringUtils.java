@@ -19,5 +19,20 @@ public final class StringUtils {
         }
     }
 
+    public static String capitalize(final String str) {
+        if(!isBlank(str)) {
+            final StringBuilder sb = new StringBuilder();
+            sb.append(str.substring(0, 1).toUpperCase());
+
+            if(str.length() > 1) {
+                sb.append(str.substring(1));
+            }
+
+            return sb.toString();
+        }
+
+        return str;
+    }
+
     private StringUtils() {}
 }

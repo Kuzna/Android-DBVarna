@@ -10,6 +10,7 @@ import cz.kuzna.android.dbvarna.annotation.Index;
 import cz.kuzna.android.dbvarna.annotation.PrimaryKey;
 import cz.kuzna.android.dbvarna.processor.definition.ColumnDefinition;
 import cz.kuzna.android.dbvarna.processor.sql.SqlLiteType;
+import cz.kuzna.android.dbvarna.processor.utils.ProcessorUtils;
 import cz.kuzna.android.dbvarna.processor.utils.StringUtils;
 
 
@@ -50,7 +51,14 @@ public final class ColumnProcessor {
             autoincrement = element.getAnnotation(PrimaryKey.class).autoincrement();
         }
 
-        return new ColumnDefinition(name, type, defaultValue, nullable, length, isPrimary, autoincrement, index, unique);
+        final String capName = StringUtils.capitalize(element.getSimpleName().toString());
+
+        final String setterMethod = "set" + capName;
+        final String getterMethod =  (ProcessorUtils.isBooleanColumn(element.asType()) ? "is" : "get") + capName;
+
+        final Class valueClass = ProcessorUtils.getValueClass(ClassName.get(element.asType()));
+
+        return new ColumnDefinition(name, type, valueClass, defaultValue, nullable, length, isPrimary, autoincrement, index, unique, setterMethod, getterMethod);
     }
 
     static String getColumnName(final Column column, final VariableElement element) {

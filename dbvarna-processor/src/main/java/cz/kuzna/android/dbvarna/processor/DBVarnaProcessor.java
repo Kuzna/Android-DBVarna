@@ -18,6 +18,7 @@ import javax.lang.model.element.TypeElement;
 import cz.kuzna.android.dbvarna.annotation.Table;
 import cz.kuzna.android.dbvarna.processor.definition.TableDefinition;
 import cz.kuzna.android.dbvarna.processor.generator.BaseWriter;
+import cz.kuzna.android.dbvarna.processor.generator.MapperWriter;
 import cz.kuzna.android.dbvarna.processor.generator.TableWriter;
 import cz.kuzna.android.dbvarna.processor.processor.TableProcessor;
 
@@ -37,9 +38,13 @@ public class DBVarnaProcessor extends AbstractProcessor {
 
         try {
             for(final TableDefinition tableDefinition : tableDefinitions) {
-                writeCodeForEachModel(tableDefinition, new TableWriter(tableDefinition));
+                writeCode(new TableWriter(tableDefinition));
 
-                System.out.println("Table " + tableDefinition.getClassName().simpleName() + " class generated");
+                if(tableDefinition.isGenerateMapper()) {
+                    writeCode(new MapperWriter(tableDefinition));
+                }
+
+                System.out.println("Table and mapper for " + tableDefinition.getClassName().simpleName() + " class generated");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,7 +78,7 @@ public class DBVarnaProcessor extends AbstractProcessor {
         return tables;
     }
 
-    public void writeCodeForEachModel(TableDefinition schema, BaseWriter writer) throws Exception {
+    public void writeCode(BaseWriter writer) throws Exception {
         writeToFiler(writer.buildJavaFile());
     }
 

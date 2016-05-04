@@ -7,8 +7,8 @@ import cz.kuzna.android.dbvarna.annotation.Table;
 /**
  * @author Radek Kuznik
  */
-@Table(generateMapper = true)
-public class User {
+@Table(name = "user_profile")
+public class UserProfile {
 
     @PrimaryKey
     private long id;
@@ -19,13 +19,17 @@ public class User {
     @Column
     private int age;
 
-    @Column
     private double wallet;
 
-    @Column
     private boolean admin;
 
-    private String ignored;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -57,21 +61,5 @@ public class User {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getIgnored() {
-        return ignored;
-    }
-
-    public void setIgnored(String ignored) {
-        this.ignored = ignored;
     }
 }

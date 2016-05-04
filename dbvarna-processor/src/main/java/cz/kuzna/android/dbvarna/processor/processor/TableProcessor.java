@@ -23,30 +23,28 @@ import cz.kuzna.android.dbvarna.processor.utils.StringUtils;
 public final class TableProcessor {
 
     public static TableDefinition proceed(final ProcessingEnvironment processingEnv, final TypeElement typeElement) {
-        final String tableName = getTableName(typeElement);
-        final ClassName modelClass = getModelClass(typeElement);
+        final Table table = typeElement.getAnnotation(Table.class);
 
-        final TableDefinition tableDefinition = new TableDefinition(tableName, modelClass);
+        final String tableName = getTableName(table, typeElement);
+        final ClassName modelClass = ClassName.get(typeElement);
+
+        final TableDefinition tableDefinition = new TableDefinition(tableName, modelClass, table.generateMapper(), table.generateDao());
         tableDefinition.getColumns().addAll(collectColumns(processingEnv, typeElement));
 
         return tableDefinition;
     }
 
-    static ClassName getModelClass(final TypeElement typeElement) {
-        final Table table = typeElement.getAnnotation(Table.class);
+//    static ClassName getModelClass(final Table table, final TypeElement typeElement) {
+//        final ClassName className = ClassName.get(typeElement);
+//
+//        if(table == null || StringUtils.isBlank(table.name())) {
+//            return className;
+//        }
+//
+//        return ClassName.get(className.packageName(), table.name());
+//    }
 
-        final ClassName className = ClassName.get(typeElement);
-
-        if(table == null || StringUtils.isBlank(table.name())) {
-            return className;
-        }
-
-        return ClassName.get(className.packageName(), table.name());
-    }
-
-    static String getTableName(final TypeElement typeElement) {
-        final Table table = typeElement.getAnnotation(Table.class);
-
+    static String getTableName(final Table table, final TypeElement typeElement) {
         final ClassName className = ClassName.get(typeElement);
 
         if(table == null || StringUtils.isBlank(table.name())) {

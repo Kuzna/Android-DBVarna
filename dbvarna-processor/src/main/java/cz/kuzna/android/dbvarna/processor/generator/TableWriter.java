@@ -17,6 +17,11 @@ import cz.kuzna.android.dbvarna.processor.utils.StringUtils;
  */
 public class TableWriter extends BaseWriter {
 
+    public static final String COLUMN_PREFIX    = "COL_";
+    public static final String SCHEMA_SUFFIX    = "Schema";
+    public static final String SQL_CREATE       = "SQL_CREATE";
+    public static final String TABLE_NAME       = "TABLE_NAME";
+
     private TableDefinition tableDefinition;
 
     public TableWriter(final TableDefinition tableDefinition) {
@@ -25,7 +30,7 @@ public class TableWriter extends BaseWriter {
 
     @Override
     public TypeSpec buildTypeSpec() {
-        TypeSpec.Builder classBuilder = TypeSpec.interfaceBuilder(tableDefinition.getClassName().simpleName() + "Schema");
+        TypeSpec.Builder classBuilder = TypeSpec.interfaceBuilder(tableDefinition.getClassName().simpleName() + SCHEMA_SUFFIX);
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.addField(buildTableNameFieldSpec());
         classBuilder.addFields(buildFieldSpecs());
@@ -52,14 +57,14 @@ public class TableWriter extends BaseWriter {
     }
 
     public FieldSpec buildTableNameFieldSpec() {
-        return FieldSpec.builder(String.class, "TABLE_NAME")
+        return FieldSpec.builder(String.class, TABLE_NAME)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .initializer("$S", tableDefinition.getName())
                 .build();
     }
 
     public FieldSpec buildColumnFieldSpec(ColumnDefinition columnDef) {
-        return FieldSpec.builder(String.class, "COL_" + columnDef.getName().toUpperCase())
+        return FieldSpec.builder(String.class, COLUMN_PREFIX + columnDef.getName().toUpperCase())
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .initializer("$S", columnDef.getName())
                 .build();
@@ -87,7 +92,7 @@ public class TableWriter extends BaseWriter {
         sb.append(")");
 
 
-        return FieldSpec.builder(String.class, "SQL_CREATE")
+        return FieldSpec.builder(String.class, SQL_CREATE)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .initializer("$S", sb.toString())
                 .build();

@@ -13,4 +13,6 @@ import java.lang.annotation.Target;
 public @interface Table {
 
     String name() default "";
+    boolean generateMapper() default true;
+    boolean generateDao() default true;
 }
