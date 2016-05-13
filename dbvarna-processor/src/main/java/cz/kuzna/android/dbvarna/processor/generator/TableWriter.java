@@ -1,6 +1,7 @@
 package cz.kuzna.android.dbvarna.processor.generator;
 
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import cz.kuzna.android.dbvarna.processor.utils.StringUtils;
 public class TableWriter extends BaseWriter {
 
     public static final String COLUMN_PREFIX    = "COL_";
+    public static final String INDEX_PREFIX     = "index_";
     public static final String SCHEMA_SUFFIX    = "Schema";
     public static final String SQL_CREATE       = "SQL_CREATE";
     public static final String TABLE_NAME       = "TABLE_NAME";
@@ -34,7 +36,7 @@ public class TableWriter extends BaseWriter {
         classBuilder.addModifiers(Modifier.PUBLIC);
         classBuilder.addField(buildTableNameFieldSpec());
         classBuilder.addFields(buildFieldSpecs());
-        classBuilder.addField(buildSqlCreate());
+        classBuilder.addField(buildSqlCreateFieldSpec());
 
         return classBuilder.build();
     }
@@ -70,7 +72,7 @@ public class TableWriter extends BaseWriter {
                 .build();
     }
 
-    public FieldSpec buildSqlCreate() {
+    public FieldSpec buildSqlCreateFieldSpec() {
         final StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE IF NOT EXISTS ");
         sb.append(tableDefinition.getName());
@@ -120,6 +122,37 @@ public class TableWriter extends BaseWriter {
         if (!StringUtils.isBlank(column.getDefaultValue())) {
             sb.append("DEFAULT " + column.getDefaultValue());
         }
+
+        return sb.toString();
+    }
+
+//    public MethodSpec buildSqlIndexQueriesBlock() {
+//        return MethodSpec.constructorBuilder()
+//                .addCode("sum = one + two;")
+//                .build();
+//    }
+
+    public ArrayList<String> buildIndexQueries() {
+        final ArrayList<String> indexQueries = new ArrayList<>();
+
+        for(final ColumnDefinition columnDef : tableDefinition.getColumns()) {
+            if(columnDef.isIndexed() && !columnDef.isUnique()) {
+                indexQueries.add(buildIndexQuery(tableDefinition.getName(), columnDef.getName()));
+            }
+        }
+
+        return indexQueries;
+    }
+
+    public String buildIndexQuery(final String tableName, final String columnName) {
+        final StringBuilder sb = new StringBuilder();
+
+        sb.append("CREATE INDEX " + INDEX_PREFIX + columnName.toLowerCase());
+        sb.append(" ON ");
+        sb.append(tableName);
+        sb.append(" (");
+        sb.append(columnName);
+        sb.append(");");
 
         return sb.toString();
     }

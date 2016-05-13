@@ -91,14 +91,14 @@ public class MapperWriter extends BaseWriter {
                 .returns(contentValuesClass)
                 .addAnnotation(Override.class)
                 .addParameter(entityClass, "entity", Modifier.FINAL)
-                .addParameter(TypeName.BOOLEAN, "addPrimaryKey", Modifier.FINAL);
+                .addParameter(TypeName.BOOLEAN, "mapPrimaryKey", Modifier.FINAL);
 
         builder.addStatement("final $T values = new $T()", contentValuesClass, contentValuesClass);
 
         for(final ColumnDefinition columnDefinition : tableDefinition.getColumns()) {
                 if(columnDefinition.isPrimaryKey()) {
                     final StringBuilder stmt = new StringBuilder();
-                    stmt.append("\nif(!addPrimaryKey) {\n");
+                    stmt.append("\nif(mapPrimaryKey) {\n");
                     stmt.append("\tvalues.put($T." + TableWriter.COLUMN_PREFIX + columnDefinition.getName().toUpperCase() + ", entity." + columnDefinition.getGetterMethod() + "());\n");
                     stmt.append("}\n\n");
 

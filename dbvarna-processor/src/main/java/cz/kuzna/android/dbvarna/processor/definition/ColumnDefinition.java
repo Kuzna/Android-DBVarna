@@ -1,8 +1,5 @@
 package cz.kuzna.android.dbvarna.processor.definition;
 
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.TypeName;
-
 import cz.kuzna.android.dbvarna.processor.sql.SqlLiteType;
 
 /**
