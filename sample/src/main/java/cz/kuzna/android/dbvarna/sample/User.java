@@ -1,6 +1,7 @@
 package cz.kuzna.android.dbvarna.sample;
 
 import cz.kuzna.android.dbvarna.annotation.Column;
+import cz.kuzna.android.dbvarna.annotation.Index;
 import cz.kuzna.android.dbvarna.annotation.PrimaryKey;
 import cz.kuzna.android.dbvarna.annotation.Table;
 
@@ -13,15 +14,18 @@ public class User {
     @PrimaryKey
     private long id;
 
+    @Index
     @Column
     private String name;
 
     @Column
     private int age;
 
+    @Index
     @Column
     private double wallet;
 
+    @Index
     @Column
     private boolean admin;
 

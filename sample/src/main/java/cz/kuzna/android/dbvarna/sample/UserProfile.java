@@ -1,6 +1,7 @@
 package cz.kuzna.android.dbvarna.sample;
 
 import cz.kuzna.android.dbvarna.annotation.Column;
+import cz.kuzna.android.dbvarna.annotation.Index;
 import cz.kuzna.android.dbvarna.annotation.PrimaryKey;
 import cz.kuzna.android.dbvarna.annotation.Table;
 
@@ -16,6 +17,7 @@ public class UserProfile {
     @Column
     private String name;
 
+    @Index
     @Column
     private int age;
 

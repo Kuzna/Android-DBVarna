@@ -4,6 +4,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class TableWriter extends BaseWriter {
     public static final String COLUMN_PREFIX    = "COL_";
     public static final String INDEX_PREFIX     = "index_";
     public static final String SCHEMA_SUFFIX    = "Schema";
-    public static final String SQL_CREATE       = "SQL_CREATE";
+    public static final String SQL_CREATE_TABLE = "SQL_CREATE_TABLE";
+    public static final String SQL_CREATE_INDEX = "SQL_CREATE_INDEX_";
     public static final String TABLE_NAME       = "TABLE_NAME";
 
     private TableDefinition tableDefinition;
@@ -37,6 +39,7 @@ public class TableWriter extends BaseWriter {
         classBuilder.addField(buildTableNameFieldSpec());
         classBuilder.addFields(buildFieldSpecs());
         classBuilder.addField(buildSqlCreateFieldSpec());
+        classBuilder.addFields(buildSqlIndexFields());
 
         return classBuilder.build();
     }
@@ -94,7 +97,7 @@ public class TableWriter extends BaseWriter {
         sb.append(")");
 
 
-        return FieldSpec.builder(String.class, SQL_CREATE)
+        return FieldSpec.builder(String.class, SQL_CREATE_TABLE)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .initializer("$S", sb.toString())
                 .build();
@@ -126,18 +129,20 @@ public class TableWriter extends BaseWriter {
         return sb.toString();
     }
 
-//    public MethodSpec buildSqlIndexQueriesBlock() {
-//        return MethodSpec.constructorBuilder()
-//                .addCode("sum = one + two;")
-//                .build();
-//    }
+    public ArrayList<FieldSpec> buildSqlIndexFields() {
+        final ArrayList<FieldSpec> indexQueries = new ArrayList<FieldSpec>();
 
-    public ArrayList<String> buildIndexQueries() {
-        final ArrayList<String> indexQueries = new ArrayList<>();
+        int index = 1;
 
         for(final ColumnDefinition columnDef : tableDefinition.getColumns()) {
             if(columnDef.isIndexed() && !columnDef.isUnique()) {
-                indexQueries.add(buildIndexQuery(tableDefinition.getName(), columnDef.getName()));
+
+                indexQueries.add(FieldSpec.builder(String.class, SQL_CREATE_INDEX + index)
+                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                        .initializer("$S", buildIndexQuery(tableDefinition.getName(), columnDef.getName()))
+                        .build());
+
+                index++;
             }
         }
 
@@ -147,12 +152,12 @@ public class TableWriter extends BaseWriter {
     public String buildIndexQuery(final String tableName, final String columnName) {
         final StringBuilder sb = new StringBuilder();
 
-        sb.append("CREATE INDEX " + INDEX_PREFIX + columnName.toLowerCase());
+        sb.append("CREATE INDEX " + INDEX_PREFIX + tableName.toLowerCase() + "_" + columnName.toLowerCase());
         sb.append(" ON ");
         sb.append(tableName);
         sb.append(" (");
         sb.append(columnName);
-        sb.append(");");
+        sb.append(")");
 
         return sb.toString();
     }
