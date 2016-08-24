@@ -63,7 +63,7 @@ public final class ColumnProcessor {
 
     static String getColumnName(final Column column, final VariableElement element) {
         if (column != null && !StringUtils.isBlank(column.name())) {
-            return column.name().toLowerCase();
+            return column.name();
         }
 
         return element.getSimpleName().toString().toLowerCase();

@@ -21,6 +21,9 @@ public class User {
     @Column
     private int age;
 
+    @Column(name = "birthPlace")
+    private int birthPlace;
+
     @Index
     @Column
     private double wallet;
@@ -77,5 +80,13 @@ public class User {
 
     public void setIgnored(String ignored) {
         this.ignored = ignored;
+    }
+
+    public int getBirthPlace() {
+        return birthPlace;
+    }
+
+    public void setBirthPlace(int birthPlace) {
+        this.birthPlace = birthPlace;
     }
 }
