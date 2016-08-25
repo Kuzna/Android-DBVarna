@@ -18,7 +18,6 @@ import cz.kuzna.android.dbvarna.mapper.AbstractMapper;
  * Abstract DAO
  *
  * @author Radek Kuznik
- * @date 12.10.15 16:57
  */
 public abstract class AbstractDao<T extends BaseEntity, V> {
 
