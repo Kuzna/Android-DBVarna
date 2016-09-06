@@ -110,7 +110,7 @@ public class TableWriter extends BaseWriter {
             sb.append(" PRIMARY KEY");
 
             if(column.isAutoincrement()) {
-                sb.append(" AUTO INCREMENT");
+                sb.append(" AUTOINCREMENT");
             }
         } else {
             if (column.isUnique()) {
