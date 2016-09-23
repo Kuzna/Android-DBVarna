@@ -45,7 +45,7 @@ public abstract class AbstractDao<T extends IEntity, V> {
     }
 
     public T insert(final T entity) {
-        final ContentValues values = getMapper().mapTo(entity, true);
+        final ContentValues values = getMapper().mapTo(entity, false);
 
         final SQLiteDatabase database = openDatabase();
 
@@ -62,17 +62,17 @@ public abstract class AbstractDao<T extends IEntity, V> {
     }
 
     public long update(final T entity) {
-        final ContentValues values = getMapper().mapTo(entity, false);
+        final ContentValues values = getMapper().mapTo(entity, true);
         return update(values, IColumn.ID, entity.getId());
     }
 
     public long update(final T entity, final String column, final long value) {
-        final ContentValues values = getMapper().mapTo(entity, false);
+        final ContentValues values = getMapper().mapTo(entity, true);
         return update(values, column, value);
     }
 
     public long update(final T entity, final String column, final String value) {
-        final ContentValues values = getMapper().mapTo(entity, false);
+        final ContentValues values = getMapper().mapTo(entity, true);
         return update(values, column, value);
     }
 

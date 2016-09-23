@@ -16,5 +16,5 @@ public abstract class AbstractMapper<T> {
 
     public abstract T mapFrom(final Cursor cursor, final String prefix);
 
-    public abstract ContentValues mapTo(final T entity, final boolean insert);
+    public abstract ContentValues mapTo(final T entity, final boolean mapPrimaryKey);
 }
