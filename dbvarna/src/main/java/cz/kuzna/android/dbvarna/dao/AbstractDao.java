@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import cz.kuzna.android.dbvarna.DatabaseManager;
 import cz.kuzna.android.dbvarna.entity.BaseEntity;
 import cz.kuzna.android.dbvarna.entity.IColumn;
+import cz.kuzna.android.dbvarna.entity.IEntity;
 import cz.kuzna.android.dbvarna.mapper.AbstractMapper;
 
 /**
@@ -19,7 +20,7 @@ import cz.kuzna.android.dbvarna.mapper.AbstractMapper;
  *
  * @author Radek Kuznik
  */
-public abstract class AbstractDao<T extends BaseEntity, V> {
+public abstract class AbstractDao<T extends IEntity, V> {
 
     private static final String TAG = "AbstractDao";
 

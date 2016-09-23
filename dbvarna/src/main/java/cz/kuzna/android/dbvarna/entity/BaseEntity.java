@@ -8,16 +8,18 @@ import cz.kuzna.android.dbvarna.annotation.PrimaryKey;
  *
  * @author Radek Kuznik
  */
-public abstract class BaseEntity {
+public abstract class BaseEntity implements IEntity {
 
     @PrimaryKey
     @Column
     protected long id;
 
+    @Override
     public long getId() {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
