@@ -123,7 +123,7 @@ public class TableWriter extends BaseWriter {
         }
 
         if (!StringUtils.isBlank(column.getDefaultValue())) {
-            sb.append("DEFAULT " + column.getDefaultValue());
+            sb.append(" DEFAULT " + column.getDefaultValue());
         }
 
         return sb.toString();
